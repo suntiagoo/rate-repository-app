@@ -8,13 +8,18 @@ const theme = {
     basic: "#ffffff",
     main: "#e1e4e8",
     unique: "#13bed1",
+    error: "#d73a4a",
   },
   fontSizes: {
     body: 14,
     subheading: 16,
   },
   fonts: {
-    main: "System",
+    base: Platform.select({
+      ios: "Arial",
+      android: "Roboto",
+      default: "System",
+    }),
   },
   fontWeights: {
     normal: "400",

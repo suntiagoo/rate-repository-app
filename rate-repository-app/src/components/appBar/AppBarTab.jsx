@@ -1,12 +1,15 @@
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
+import { Link } from "react-router-native";
 import theme from "../../theme";
-
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    flexGrow: 1,
-    alignItems: "flex-end",
-    justifyContent: "space-around",
+    //flexDirection: "row",
+    flexGrow: 0,
+    padding: 5,
+    //alignItems: "flex-start",
+    //justifyContent: "space-between",
+    //alignContent: "space-between",
+    //flexWrap: "wrap",
   },
   tab: {
     flexGrow: 0,
@@ -14,6 +17,7 @@ const styles = StyleSheet.create({
   text: {
     color: theme.colors.netrual,
     textDecorationLine: "underline",
+    padding: 5,
   },
 });
 
@@ -25,11 +29,20 @@ const TabAction = ({ children, ...props }) => {
   );
 };
 
-const AppBarTab = () => {
+const AppBarTab = ({ nameTab, path }) => {
   return (
     <View style={styles.container}>
-      <TabAction>repositories</TabAction>
-      <TabAction>code</TabAction>
+      <TabAction>
+        <Link to={path}>
+          <Text>{nameTab}</Text>
+        </Link>
+      </TabAction>
+      {/* 
+      <TabAction>
+        <Link to="/sign">
+          <Text>sign in</Text>
+        </Link>
+      </TabAction> */}
     </View>
   );
 };

@@ -1,14 +1,18 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
+import { StyleSheet, StatusBar, View } from "react-native";
+import { NativeRouter } from "react-router-native";
 import Main from "./src/components/Main";
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <NativeRouter
+      future={{
+        v7_relativeSplatPath: true,
+        v7_startTransition: true,
+      }}
+    >
       <Main />
       <StatusBar style="auto" />
-    </View>
+    </NativeRouter>
   );
 }
 
