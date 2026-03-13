@@ -1,5 +1,16 @@
-import { FlatList, View, StyleSheet } from "react-native";
+//import useRepositories from "../hooks/useRepositories";
+import {
+  FlatList,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+} from "react-native";
 import RepositoryItem from "./RepositoryItem";
+
+import { useQuery } from "@apollo/client/react";
+import { GET_REPOSITORIES } from "../graphql/queries";
+import { useEffect, useState } from "react";
 
 const styles = StyleSheet.create({
   separator: {
@@ -7,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const repositories = [
+const repositoriesLocal = [
   {
     id: "jaredpalmer.formik",
     fullName: "jaredpalmer/formik",
@@ -57,9 +68,33 @@ const repositories = [
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
+  //const { repositories } = useRepositories();
+
+  const [repo, setRepo] = useState();
+  const { loading, error, data } = useQuery(GET_REPOSITORIES, {
+    fetchPolicy: "cache-and-network",
+  });
+  useEffect(() => {
+    setRepo(data);
+  }, [data]);
+
+  const repositoryNodes = repo
+    ? repo?.repositories?.edges.map((edge) => edge.node)
+    : [];
+
+  if (loading)
+    return (
+      <ActivityIndicator
+        size="large"
+        color="#0000ff"
+        style={{ flex: 1, justifyContent: "center" }}
+      />
+    );
+  if (error) return <Text>Error: {error.message}</Text>;
+
   return (
     <FlatList
-      data={repositories}
+      data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => (
         <RepositoryItem

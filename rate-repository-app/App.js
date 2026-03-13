@@ -1,8 +1,12 @@
+//import React from "react";
 import { StyleSheet, StatusBar, View } from "react-native";
 import { NativeRouter } from "react-router-native";
+import { ApolloProvider } from "@apollo/client/react";
+import createApolloClient from "./src/utils/apolloClient";
 import Main from "./src/components/Main";
 
-export default function App() {
+const apolloClient = createApolloClient;
+const App = () => {
   return (
     <NativeRouter
       future={{
@@ -10,11 +14,13 @@ export default function App() {
         v7_startTransition: true,
       }}
     >
-      <Main />
-      <StatusBar style="auto" />
+      <ApolloProvider client={apolloClient}>
+        <Main />
+        <StatusBar style="auto" />
+      </ApolloProvider>
     </NativeRouter>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -27,3 +33,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default App;

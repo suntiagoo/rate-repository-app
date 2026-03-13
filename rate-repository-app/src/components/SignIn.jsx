@@ -4,10 +4,12 @@ import FormikTextInput from "./FormikTextInput";
 import { Formik } from "formik";
 import theme from "../theme";
 import * as yup from "yup";
+import useSignIn from "../hooks/useSignIn";
+import AuthStorage from "../utils/authStorage";
 
 const initialValues = {
-  mass: "",
-  height: "",
+  username: "",
+  password: "",
 };
 
 const styles = StyleSheet.create({
@@ -35,14 +37,14 @@ const styles = StyleSheet.create({
 });
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required("name is required"),
+  username: yup.string().required("username is required"),
   password: yup.string().required("password is required"),
 });
 
 const SignInForm = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
-      <FormikTextInput name="name" placeholder="Bob" />
+      <FormikTextInput name="username" placeholder="Bob" />
       <FormikTextInput name="password" placeholder="#Quertty1234" />
       <View style={styles.button}>
         <TouchableWithoutFeedback onPress={onSubmit}>
@@ -54,13 +56,21 @@ const SignInForm = ({ onSubmit }) => {
 };
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    const name = values.name;
-    const password = values.password;
-    if (name && password) {
-      console.log(`Your name is: ${name}`);
+  const [signIn] = useSignIn();
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    try {
+      const { data } = await signIn({ username, password });
+      console.log("user:", data.authenticate.accessToken);
+      const tokenUser = new AuthStorage("authA");
+      await tokenUser.setAccessToken(data.authenticate.accessToken);
+      const listTokensStorage = await tokenUser.getAccessToken();
+      console.log("token guardado", listTokensStorage);
+    } catch (e) {
+      console.log(e);
     }
   };
+
   return (
     <Formik
       initialValues={initialValues}
